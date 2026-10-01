@@ -110,6 +110,7 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   box-shadow: 0 1px 4px rgba(0, 0, 0, .35);
 }
 .pin-off { background: transparent; color: var(--muted); border: 1.5px dashed #b9ab90; box-shadow: none; }
+.pin-alt { background: #fff; color: var(--c); border: 2px dashed var(--c); }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .btn {
   display: inline-flex;
@@ -140,6 +141,7 @@ ol, ul { margin: 0; padding: 0; list-style: none; }
   white-space: nowrap;
 }
 .tag-warn { background: var(--warn-bg); border-color: #e6c88c; color: var(--warn-ink); }
+.tag-alt { border-style: dashed; border-color: var(--muted); color: var(--ink); }
 .footnote { color: var(--muted); font-size: 12px; line-height: 1.7; }
 
 /* ---------- 地圖頁 ---------- */
@@ -326,6 +328,7 @@ body.map-page {
   border-radius: 50%;
   background: var(--card);
 }
+.tl-alt .tl-dot { border-style: dashed; }
 .tl-time { padding-top: 2px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
 .tl-body h3 { font-size: 17px; line-height: 1.4; }
 .tl-body p { margin-top: 5px; font-size: 14px; }

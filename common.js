@@ -71,13 +71,13 @@ function linkButtons(p, { withSearch = false } = {}) {
 function dayStops(di) {
   const day = TRIP.days[di];
   const seen = new Map();
-  let n = 0;
+  let n = 0, a = 0;
   return day.items.map((it, ii) => {
     const place = it.p ? PLACES[it.p] : {};
     const s = { ...place, ...it, key: it.p || null, dayIndex: di, color: day.color, id: `${di}-${ii}` };
     s.mappable = !!s.gcj && !s.outside;
     if (s.mappable) {
-      if (!seen.has(s.key)) seen.set(s.key, { n: ++n, id: s.id });
+      if (!seen.has(s.key)) seen.set(s.key, { n: s.alt ? 'ABCDEFGH'[a++] : ++n, id: s.id });
       s.n = seen.get(s.key).n;
       s.markerId = seen.get(s.key).id;
       s.first = s.markerId === s.id;
@@ -92,4 +92,4 @@ function todayIndex() {
   return TRIP.days.findIndex(d => d.iso === iso);
 }
 
-const TYPE_LABEL = { transport: '交通', hotel: '住宿', spot: '景點', food: '餐飲', nightlife: '夜生活', relax: '放鬆' };
+const TYPE_LABEL = { transport: '交通', hotel: '住宿', spot: '景點', food: '餐飲', nightlife: '夜生活', relax: '放鬆', shop: '購物' };

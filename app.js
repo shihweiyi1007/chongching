@@ -14,7 +14,7 @@ const $ = id => document.getElementById(id);
 function popupHtml(s) {
   const day = TRIP.days[s.dayIndex];
   return `<div class="pop">
-    <span class="pop-day" style="--c:${s.color}">${esc(day.date)}（${esc(day.weekday)}）· 第 ${s.n} 站</span>
+    <span class="pop-day" style="--c:${s.color}">${esc(day.date)}（${esc(day.weekday)}）· ${s.alt ? `備案 ${s.n}` : `第 ${s.n} 站`}</span>
     <b>${esc(s.name)}</b>
     ${s.desc ? `<p>${esc(s.desc)}</p>` : ''}
     ${s.approx ? '<p class="warn">位置為概略，請以高德搜尋結果為準。</p>' : ''}
@@ -32,7 +32,7 @@ function groups() {
     return {
       color: TRIP.days[di].color,
       markers: stops.filter(s => s.mappable && s.first),
-      path: stops.filter(s => s.mappable).map(s => s.gcj),
+      path: stops.filter(s => s.mappable && !s.alt).map(s => s.gcj),
     };
   });
 }
@@ -40,9 +40,9 @@ function groups() {
 // ---- 清單 ----
 function stopRow(s) {
   const pin = s.mappable
-    ? `<span class="pin" style="--c:${s.color}">${s.n}</span>`
+    ? `<span class="pin${s.alt ? ' pin-alt' : ''}" style="--c:${s.color}">${s.n}</span>`
     : `<span class="pin pin-off" title="不在地圖上">–</span>`;
-  const flag = !s.gcj && s.type === 'hotel' ? '<span class="tag tag-warn">位置待確認</span>' : (s.approx ? '<span class="tag tag-warn">位置概略</span>' : '');
+  const flag = (s.alt ? '<span class="tag tag-alt">備案</span>' : '') + (s.approx ? '<span class="tag tag-warn">位置概略</span>' : '');
   return `<li class="stop${s.mappable ? ' is-mappable' : ''}" data-marker="${s.markerId || ''}">
     ${pin}
     <div class="stop-body">
@@ -118,7 +118,7 @@ function leafletKit(el) {
           const ll = toW(s.gcj);
           const m = L.marker(ll, {
             title: s.name,
-            icon: L.divIcon({ className: 'pin-wrap', html: `<span class="pin" style="--c:${g.color}">${s.n}</span>`, iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14] }),
+            icon: L.divIcon({ className: 'pin-wrap', html: `<span class="pin${s.alt ? ' pin-alt' : ''}" style="--c:${g.color}">${s.n}</span>`, iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14] }),
           }).bindPopup(popupHtml(s), { maxWidth: 270, minWidth: 210, maxHeight: Math.max(130, el.clientHeight - 80) }).addTo(layer);
           index.set(s.markerId, m);
           all.push(ll); if (!s.far) near.push(ll);
@@ -166,8 +166,8 @@ function googleKit(el) {
         g.markers.forEach(s => {
           const m = new google.maps.Marker({
             map, position: toG(s.gcj), title: s.name,
-            label: { text: String(s.n), color: '#fff', fontWeight: '700', fontSize: '13px' },
-            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 14, fillColor: g.color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2.5 },
+            label: { text: String(s.n), color: s.alt ? g.color : '#fff', fontWeight: '700', fontSize: '13px' },
+            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 14, fillColor: s.alt ? '#fff' : g.color, fillOpacity: 1, strokeColor: s.alt ? g.color : '#fff', strokeWeight: 2.5 },
           });
           m.addListener('click', () => { info.setContent(popupHtml(s)); info.open({ map, anchor: m }); });
           m._stop = s;

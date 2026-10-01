@@ -1,11 +1,11 @@
 // 行程表頁：不需要地圖，逐日列出每一站的名稱、說明與高德／Google 連結。
 
 function itemHtml(s, i) {
-  const flag = !s.gcj && s.type === 'hotel' ? '<span class="tag tag-warn">位置待確認</span>'
-    : (s.approx ? '<span class="tag tag-warn">位置概略</span>' : '');
+  const flag = (s.alt ? '<span class="tag tag-alt">備案</span>' : '')
+    + (s.approx ? '<span class="tag tag-warn">位置概略</span>' : '');
   const zh = s.zh && !s.outside ? `<div class="zh">高德名稱：<span lang="zh-Hans">${esc(s.zh)}</span></div>` : '';
   const addr = s.addr ? `<div class="zh">地址：${esc(s.addr)}</div>` : '';
-  return `<li class="tl-item">
+  return `<li class="tl-item${s.alt ? ' tl-alt' : ''}">
     <span class="tl-dot"></span>
     <div class="tl-time">${esc(s.time || String(i + 1).padStart(2, '0'))}</div>
     <div class="tl-body">
