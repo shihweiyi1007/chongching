@@ -51,12 +51,12 @@ function amapSearchUrl(keyword) {
   return `https://uri.amap.com/search?keyword=${encodeURIComponent(keyword)}&city=${AMAP_CITY}&src=${SRC}&callnative=1`;
 }
 function googlePinUrl(p) {
-  const q = p.gcj && !p.approx ? `${p.gcj[0]},${p.gcj[1]}` : `${p.zh || p.name} 重庆`;
+  const q = p.gcj && !p.approx ? `${p.gcj[0]},${p.gcj[1]}` : `${p.search || p.zh || p.name} 重庆`;
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 }
 // 座標已確認的地點才用座標開高德，其餘用名稱搜尋
 function hasPin(p) { return !!p.gcj && !p.approx; }
-function amapUrl(p) { return hasPin(p) ? amapPinUrl(p) : amapSearchUrl(p.zh || p.name); }
+function amapUrl(p) { return hasPin(p) ? amapPinUrl(p) : amapSearchUrl(p.search || p.zh || p.name); }
 
 function linkButtons(p, { withSearch = false } = {}) {
   if (p.outside || !(p.zh || p.gcj)) return '';
