@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6efe2">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="重慶行程">
+  <title>重慶・六天五夜｜行程表</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23a8563d'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23fff' font-family='serif'%3E渝%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="schedule-page">
+  <div class="sticky-head" id="stickyHead">
+    <header class="topbar">
+      <div class="brand">
+        <h1>重慶・六天五夜</h1>
+        <span>2026.10.02 – 10.07</span>
+      </div>
+      <nav aria-label="頁面">
+        <a href="index.html">地圖</a>
+        <a class="active" href="itinerary.html" aria-current="page">行程表</a>
+      </nav>
+    </header>
+    <div class="chips" id="dayJump" role="navigation" aria-label="跳到日期"></div>
+  </div>
+
+  <main class="schedule-wrap">
+    <div id="schedule"></div>
+
+    <section class="extras">
+      <h2>備選美食與飲料</h2>
+      <p>攻略列出但沒有排進固定時段，點一下用高德搜尋附近的分店。</p>
+      <div id="extras" class="extra-list"></div>
+    </section>
+
+    <p class="footnote">「高德地圖」用已核對的座標直接開啟高德 App 並落在該地點；「搜名稱」改用店名或景點名搜尋，方便看營業時間與入口。標示「位置待確認」的住宿只提供名稱搜尋。</p>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script src="schedule.js"></script>
+</body>
+</html>
