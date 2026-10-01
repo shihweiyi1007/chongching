@@ -195,16 +195,38 @@ body.map-page {
   position: sticky;
   top: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 0 10px;
+  padding: 10px 0 6px;
   background: var(--card);
   border-bottom: 1px solid var(--line);
 }
+.panel-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .panel-head h2 { font-family: var(--serif); font-size: 17px; }
 .panel-head span { font-size: 12px; color: var(--muted); }
+.panel-head .btn { flex: none; cursor: pointer; font-family: inherit; }
+
+/* 行程收合：地圖佔滿，地圖上出現重新展開的按鈕 */
+.map-main.collapsed .panel { display: none; }
+.map-main.collapsed .map-shell { flex: 1; }
+.reopen {
+  position: absolute;
+  left: 50%;
+  bottom: calc(34px + var(--safe-b));
+  z-index: 1000;
+  transform: translateX(-50%);
+  min-height: 42px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+  cursor: pointer;
+}
+.reopen[hidden] { display: none; }
 .toggle { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-size: 13px; cursor: pointer; }
 .toggle input { width: 18px; height: 18px; accent-color: var(--rust); }
 .list-day {

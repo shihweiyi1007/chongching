@@ -109,11 +109,6 @@ const PLACES = {
     gcj: [29.55369, 106.53804], // G 李子壩觀景平台；O 李子坝站 29.552851,106.537677
     desc: '軌道 2 號線列車直接穿過居民樓，在樓下的觀景平台拍列車進出站。',
   },
-  datianwan: {
-    name: '大田灣小學', zh: '重庆市渝中区大田湾小学', type: 'spot',
-    gcj: [29.555872, 106.54146], // G；O 29.555965,106.541618
-    desc: '攻略安排在李子壩之後前往，離李子壩觀景平台直線約 400 公尺。',
-  },
   huangjueping: {
     name: '塗鴉一條街（黃桷坪）', zh: '黄桷坪涂鸦艺术街', type: 'spot',
     gcj: [29.48593, 106.541563], // G 黃桷坪正街（四川美術學院老校區旁）
@@ -138,7 +133,7 @@ const PLACES = {
   changjiangguoji: {
     name: '長江國際', zh: '长江国际', type: 'spot',
     gcj: [29.539634, 106.566094], // O 长江国际建築；G 長江國際公寓 29.539954,106.565656
-    desc: '南濱路旁的大樓，攻略註記主要是拍樓，可去可不去。',
+    desc: '南濱路旁的大樓，攻略註記主要是拍樓。',
   },
   xiahaoli: {
     name: '下浩里', zh: '下浩里', type: 'spot',
@@ -190,18 +185,20 @@ const TRIP = {
         { p: 'jiangtan', note: '攻略手稿列入江北行程。' },
         { p: 'qiansimen', note: '過江連接江北與渝中。' },
         { p: 'jiujie', note: '18:00 後，夜生活。' },
+        { p: 'hotel2', note: '回住宿。' },
       ],
     },
     {
       iso: '2026-10-05', date: '10/5', weekday: '一', area: '渝中西側＋九龍坡', color: '#2a8a3c',
       items: [
+        { p: 'hotel2', note: '住宿出發。' },
         { p: 'zhongshan4', note: '當日路程較遠，可打車或地鐵。' },
         { p: 'huangguan' },
         { p: 'liziba' },
-        { p: 'datianwan' },
         { p: 'huangjueping' },
         { p: 'shidaitianjie' },
         { p: 'jinse' },
+        { p: 'hotel2', note: '回住宿。' },
       ],
     },
     {
@@ -209,7 +206,7 @@ const TRIP = {
       items: [
         { p: 'hotel2', note: '住宿出發。' },
         { p: 'suodao' },
-        { p: 'changjiangguoji' },
+        { p: 'changjiangguoji', note: '可去可不去。' },
         { p: 'xiahaoli' },
         { p: 'huangyuming' },
         { p: 'hotel2', note: '返回住宿。' },
@@ -218,6 +215,7 @@ const TRIP = {
     {
       iso: '2026-10-07', date: '10/7', weekday: '三', area: '返台', color: '#5b6472',
       items: [
+        { p: 'hotel2', note: '退房。' },
         { name: '午餐', type: 'food', time: '中午', note: '攻略未指定餐廳。' },
         { p: 'ckg', time: '15:00', note: 'CKG → TSA，返回台北。' },
       ],

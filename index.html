@@ -25,23 +25,27 @@
 
   <div class="chips" id="dayFilters" role="group" aria-label="選擇日期"></div>
 
-  <main class="map-main">
+  <main class="map-main collapsed" id="mapMain">
     <section class="map-shell" aria-label="地圖">
       <div id="map"></div>
       <div id="mapStatus" class="map-status"></div>
       <div id="basemap" class="basemap"></div>
+      <button id="panelOpen" class="reopen" type="button">顯示全部行程</button>
     </section>
 
     <aside class="panel" id="panel">
       <div class="panel-head">
-        <div>
+        <div class="panel-row">
           <h2 id="listTitle">全部行程</h2>
-          <span id="placeCount"></span>
+          <button id="panelClose" class="btn" type="button" aria-controls="panel">收合</button>
         </div>
-        <label class="toggle"><input id="routeToggle" type="checkbox" checked>順序連線</label>
+        <div class="panel-row">
+          <span id="placeCount"></span>
+          <label class="toggle"><input id="routeToggle" type="checkbox" checked>順序連線</label>
+        </div>
       </div>
       <div id="placeList"></div>
-      <p class="footnote">點清單中的地點可在地圖上定位。「高德地圖」會用已核對的座標直接開啟高德 App；標示「高德搜尋」的地點則用名稱搜尋。</p>
+      <p class="footnote">點清單中的地點可在地圖上定位；再按一次上方的日期，或按「收合」，可以把這一欄收起來。「高德地圖」會用已核對的座標直接開啟高德 App；標示「高德搜尋」的地點則用名稱或地址搜尋。</p>
     </aside>
   </main>
 

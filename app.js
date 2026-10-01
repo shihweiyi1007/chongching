@@ -3,6 +3,11 @@
 let kit = null;
 let activeDay = 'all';
 let showRoute = true;
+let panelOpen = false; // 行程清單預設收合，按日期才展開
+
+// 地圖可移動的範圍：重慶主城區加機場（GCJ-02 與 WGS-84 在這個尺度下可視為相同）
+const CITY = { south: 29.30, west: 106.25, north: 29.90, east: 106.90 };
+const MIN_ZOOM = 11;
 
 const $ = id => document.getElementById(id);
 
@@ -60,6 +65,14 @@ function renderList() {
   const d = activeDay === 'all' ? null : TRIP.days[activeDay];
   $('listTitle').textContent = d ? `${d.date}（${d.weekday}）${d.area}` : '全部行程';
   $('placeCount').textContent = `地圖上 ${count} 個點`;
+  $('panelOpen').textContent = d ? `顯示 ${d.date} 行程` : '顯示全部行程';
+}
+// 收合時地圖佔滿畫面，展開時行程出現在地圖下方（橫向畫面在右側）
+function setPanel(open) {
+  panelOpen = open;
+  $('mapMain').classList.toggle('collapsed', !open);
+  $('panelOpen').hidden = open;
+  $('panelClose').setAttribute('aria-expanded', open);
 }
 function renderChips() {
   $('dayFilters').innerHTML = `<button data-day="all">全部</button>` + TRIP.days.map((d, i) =>
@@ -81,7 +94,10 @@ function refresh() {
 
 // ---- 底圖：OpenStreetMap（Leaflet）。OSM 是 WGS-84，所以要把 GCJ-02 換回去 ----
 function leafletKit(el) {
-  const map = L.map(el, { zoomControl: true }).setView(gcjToWgs(29.56, 106.56), 12);
+  const map = L.map(el, {
+    zoomControl: true, minZoom: MIN_ZOOM, maxBoundsViscosity: 1, zoomSnap: 0.5,
+    maxBounds: [[CITY.south, CITY.west], [CITY.north, CITY.east]],
+  }).setView(gcjToWgs(29.56, 106.56), 12);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map);
@@ -91,6 +107,7 @@ function leafletKit(el) {
   return {
     name: 'OpenStreetMap',
     draw(gs, opt) {
+      map.invalidateSize({ animate: false });
       layer.clearLayers(); index.clear();
       const near = [], all = [];
       gs.forEach(g => {
@@ -107,9 +124,9 @@ function leafletKit(el) {
           all.push(ll); if (!s.far) near.push(ll);
         });
       });
-      // 機場離市區約 20 公里，同時有其他點時不讓它把視野拉得太遠
+      // 機場離市區約 20 公里，同時有其他點時視野只對準市區
       const fit = near.length ? near : all;
-      if (fit.length) map.fitBounds(fit, { padding: [36, 36], maxZoom: 16 });
+      if (fit.length) map.fitBounds(fit, { padding: [26, 26], maxZoom: fit.length === 1 ? 14 : 16, animate: false });
     },
     focus(id) {
       const m = index.get(id);
@@ -125,7 +142,8 @@ function leafletKit(el) {
 // ---- 底圖：Google Maps。中國境內道路圖本身就是 GCJ-02，座標直接用 ----
 function googleKit(el) {
   const map = new google.maps.Map(el, {
-    center: { lat: 29.56, lng: 106.56 }, zoom: 12,
+    center: { lat: 29.56, lng: 106.56 }, zoom: 12, minZoom: MIN_ZOOM,
+    restriction: { latLngBounds: CITY, strictBounds: false },
     mapTypeControl: false, streetViewControl: false, fullscreenControl: false,
     gestureHandling: 'greedy', clickableIcons: false,
   });
@@ -158,7 +176,7 @@ function googleKit(el) {
         });
       });
       const fit = near.length ? near : all;
-      if (fit.length === 1) { map.setCenter(fit[0]); map.setZoom(15); }
+      if (fit.length === 1) { map.setCenter(fit[0]); map.setZoom(14); }
       else if (fit.length) {
         const b = new google.maps.LatLngBounds();
         fit.forEach(p => b.extend(p));
@@ -228,15 +246,21 @@ function boot() {
   if (t >= 0) activeDay = t;
   renderChips();
   renderList();
+  setPanel(t >= 0); // 旅程期間直接展開當天行程
 
+  // 按日期：切到那一天並展開行程；再按一次同一個日期則收合／展開
   $('dayFilters').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
-    activeDay = b.dataset.day === 'all' ? 'all' : +b.dataset.day;
+    const day = b.dataset.day === 'all' ? 'all' : +b.dataset.day;
+    if (day === activeDay) setPanel(!panelOpen);
+    else { activeDay = day; setPanel(true); }
     syncChips();
     refresh();
     $('panel').scrollTop = 0;
   });
+  $('panelClose').addEventListener('click', () => { setPanel(false); refresh(); });
+  $('panelOpen').addEventListener('click', () => { setPanel(true); refresh(); });
   $('routeToggle').addEventListener('change', e => { showRoute = e.target.checked; refresh(); });
   $('placeList').addEventListener('click', e => {
     if (e.target.closest('a')) return;
